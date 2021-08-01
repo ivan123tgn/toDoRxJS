@@ -1,0 +1,7 @@
+<ng-container *ngIf="(dataService.todos$ | async) as todos">
+  <todo-element *ngFor="let todo of todos" [todoData] = todo></todo-element>
+</ng-container>
+
+
+
+
