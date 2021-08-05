@@ -1,10 +1,8 @@
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Todo} from "../shared/models";
-import {EventEmitter} from "@angular/core";
 import {DataService} from "../services/data.service";
 import {fromEvent, Observable, Subscription} from "rxjs";
-import {tap} from "rxjs/operators";
-import {subscriptionLogsToBeFn} from "rxjs/internal/testing/TestScheduler";
+import {finalize, first, map, tap} from "rxjs/operators";
 
 @Component({
   selector: 'todo-element',
@@ -15,26 +13,98 @@ import {subscriptionLogsToBeFn} from "rxjs/internal/testing/TestScheduler";
 export class TodoElementComponent implements OnInit,AfterViewInit,OnDestroy {
   @Input()
   todoData: Todo;
-  @ViewChild('deleteButton') deleteButton: ElementRef ;
+
+  @ViewChild('deleteButton') deleteButton: ElementRef;
+  @ViewChild('deleteForeverButton') deleteForeverButton: ElementRef;
+  @ViewChild('completeBox') completeBox: ElementRef ;
+  @ViewChild('restoreButton') restoreButton: ElementRef ;
+  @ViewChild('todoText') todoText: ElementRef ;
+  @ViewChild('changeInput') changeInput: ElementRef ;
+  @ViewChild('saveChange') saveChange: ElementRef ;
+
   deleteEvent$: Observable<any>;
-  subscription$: Subscription;
+  completeEvent$: Observable<any>;
+  restoreEvent$: Observable<any>;
+  deleteForeverEvent$: Observable<any>;
+  todoTextEvent$: Observable<any>;
+
+  subscriptionDelete$: Subscription;
+  subscriptionDeleteForever$: Subscription;
+  subscriptionComplete$ : Subscription;
+  subscriptionRestore$: Subscription;
+  subscriptionTextEvent$: Subscription;
+
+  showChangeInput: boolean = false;
 
   constructor(public dataService: DataService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit() {
+
     // Поток нажатий на кнопку удаления
     this.deleteEvent$ = fromEvent<any>(this.deleteButton.nativeElement,'click')
       .pipe(
-        tap(() => this.dataService.onDeleteTodo(this.todoData.date))
+        tap(() => {
+          this.dataService.onDeleteTodo(this.todoData.date);
+        })
       );
-    this.subscription$ = this.deleteEvent$.subscribe();
+    this.subscriptionDelete$ = this.deleteEvent$.subscribe();
+
+    // Поток нажатий на чекбокс завершения
+    this.completeEvent$ = fromEvent<any>(this.completeBox.nativeElement,'click')
+      .pipe(
+        tap(() => this.dataService.onCompleteTodo(this.todoData.date))
+      );
+    this.subscriptionComplete$ = this.completeEvent$.subscribe();
+
+    // Поток нажатий на кнопку восстановления
+    this.restoreEvent$ = fromEvent<any>(this.restoreButton.nativeElement,'click')
+      .pipe(
+        tap(() => {
+          this.dataService.onRestoreTodo(this.todoData.date);
+        })
+      );
+    this.subscriptionRestore$ = this.restoreEvent$.subscribe();
+
+    //Поток нажатий на кнопку "удалить навсегда"
+    this.deleteForeverEvent$ = fromEvent<any>(this.deleteForeverButton.nativeElement,'click')
+      .pipe(
+        tap(() => {
+          this.dataService.onDeleteForeverTodo(this.todoData.date);
+        })
+      );
+    this.subscriptionDeleteForever$ = this.deleteForeverEvent$.subscribe();
+
+    //Поток двойных кликов для редактирования todo
+    this.todoTextEvent$ = fromEvent<any>(this.todoText.nativeElement, 'dblclick')
+      .pipe(
+        tap(() => {
+          this.showChangeInput = true;
+          const clickEvent$ = fromEvent<any>(this.saveChange.nativeElement,'click')
+            .pipe(
+              first(),
+              map(() => this.changeInput.nativeElement.value),
+              tap(val => {
+                this.todoData.content = val;
+                this.showChangeInput = false;
+                this.dataService.refreshTodo(this.todoData.date, val);
+              })
+            ).subscribe();
+        })
+      );
+    this.subscriptionTextEvent$ = this.todoTextEvent$.subscribe();
+
   }
 
   ngOnDestroy() {
-    this.subscription$.unsubscribe();
+    // Отписка от всех Observable
+    this.subscriptionDelete$.unsubscribe();
+    this.subscriptionComplete$.unsubscribe();
+    this.subscriptionRestore$.unsubscribe();
+    this.subscriptionDeleteForever$.unsubscribe();
+    this.subscriptionTextEvent$.unsubscribe();
   }
+
 
 }

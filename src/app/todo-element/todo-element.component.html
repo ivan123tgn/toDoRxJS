@@ -1,5 +1,18 @@
-<p>
-  {{todoData.content}}
-  <button #deleteButton>X</button>
-</p>
+<p [ngClass]="{'completed': todoData.completed, 'active': !todoData.completed, 'deleted': todoData.deleted}">
+  <input type="checkbox" [checked]="todoData.completed" #completeBox class="completeBox">
+  <span class="todoText" [ngClass]="{'hidden': showChangeInput}" #todoText>{{todoData.content}}</span>
+  <span class="inputAndButton">
+      <input [ngClass]="{'hidden': !showChangeInput}" type="text" pInputText class="p-inputtext-lg" [value]="todoData.content" #changeInput >
+      <button [ngClass]="{'hidden': !showChangeInput}" pButton pRipple type="button" icon="pi pi-save" class="p-button-success p-button-lg" #saveChange></button>
+  </span>
 
+
+  <span>
+    <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-danger p-button-lg" #deleteButton
+            [ngClass]="{'hidden':todoData.deleted}"></button>
+    <button pButton pRipple type="button" icon="pi pi-replay" class="p-button-success p-button-lg" #restoreButton
+            [ngClass]="{'hidden':!todoData.deleted}"></button>
+    <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-danger p-button-lg" #deleteForeverButton
+            [ngClass]="{'hidden':!todoData.deleted}"></button>
+  </span>
+</p>

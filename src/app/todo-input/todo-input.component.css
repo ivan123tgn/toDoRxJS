@@ -1,0 +1,8 @@
+input {
+  width: 80%;
+  font-size: 28px !important;
+}
+button {
+  height: 58px;
+  width: auto;
+}

@@ -55,7 +55,9 @@ export class TodoInputComponent implements OnInit, AfterViewInit {
       deleted: false,
       date: Date.now()
     };
-    this.dataService.onAddTodo(newTodo);
+    if (newTodo.content !== '') {
+      this.dataService.onAddTodo(newTodo);
+    }
   }
 
 }

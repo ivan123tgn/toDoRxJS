@@ -1,7 +1,34 @@
-<ng-container *ngIf="(dataService.todos$ | async) as todos">
-  <todo-element *ngFor="let todo of todos" [todoData] = todo></todo-element>
-</ng-container>
+<p-tabView *ngIf="(showList$ | async)">
+    <p-tabPanel [header]="(totalCounter$ | async)">
+      <ng-container *ngIf="(dataService.nonDeletedTodos$ | async) as todos">
+        <todo-element *ngFor="let todo of todos" [todoData] = todo></todo-element>
+      </ng-container>
+    </p-tabPanel>
+    <p-tabPanel [header]="(activeCounter$ | async)">
+      <ng-container *ngIf="(dataService.activeTodos$ | async) as activeTodos">
+        <todo-element *ngFor="let todo of activeTodos" [todoData] = todo></todo-element>
+      </ng-container>
+    </p-tabPanel>
+    <p-tabPanel [header]="(completedCounter$ | async)">
+      <ng-container *ngIf="(dataService.completedTodos$ | async) as completedTodos">
+        <todo-element *ngFor="let todo of completedTodos" [todoData] = todo></todo-element>
+      </ng-container>
+    </p-tabPanel>
+  <p-tabPanel [header]="(deletedCounter$ | async)">
+    <ng-container *ngIf="(dataService.deletedTodos$ | async) as deletedTodos">
+      <todo-element *ngFor="let todo of deletedTodos" [todoData] = todo></todo-element>
+    </ng-container>
+  </p-tabPanel>
+</p-tabView>
 
+<div class="p-buttonset" *ngIf="(showList$ | async)">
+  <button pButton pRipple type="button" label="Remove completed" icon="pi pi-trash" class="p-button-danger p-button-lg"
+          (click)="dataService.onRemoveCompleted()"></button>
+  <button pButton pRipple type="button" label="Restore all" icon="pi pi-replay" class="p-button-success p-button-lg"
+          (click)="dataService.onRestoreAll()"></button>
+  <button pButton pRipple type="button" label="Clear all deleted" icon="pi pi-times" class="p-button-warning p-button-lg"
+          (click)="dataService.onClearAll()"></button>
+</div>
 
 
 

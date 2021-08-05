@@ -8,4 +8,6 @@ import {DataService} from "./services/data.service";
   providers: [DataService]
 })
 
-export class AppComponent {}
+export class AppComponent {
+  constructor() {  }
+}

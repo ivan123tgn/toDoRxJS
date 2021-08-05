@@ -1,0 +1,32 @@
+.hidden {
+  visibility: hidden;
+  height: 0px;
+  width: 0px;
+}
+
+:host ::ng-deep .p-tabview-title {
+  font-size: 25px;
+  color: #505050;
+}
+
+:host ::ng-deep .p-tabview-nav {
+  background-color: transparent;
+}
+
+:host ::ng-deep .p-tabview-panels {
+  background-color: transparent;
+}
+
+:host ::ng-deep .p-tabview-nav-link {
+  background-color: transparent !important;
+}
+
+:host ::ng-deep .p-tabview {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.p-buttonset {
+  text-align: center;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,61 @@
+.completed {
+  opacity: 0.7;
+  background-color: #D0D0D0;
+}
+
+.active {
+  background-color: rgba(204, 255, 153, 0.4);
+}
+
+.deleted {
+  background-color: #ffcccc;
+}
+
+.completed .todoText {
+  text-decoration: line-through;
+}
+
+.hidden {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+p {
+  font-size: 27px;
+  width: 100%;
+  /*width: 500px;*/
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  color: black;
+  text-align: center;
+}
+
+button {
+  margin: 5px;
+}
+
+.completeBox {
+  transform: scale(2);
+  margin-left: 15px;
+}
+
+span.todoText {
+  width: 80vw;
+  overflow-wrap: break-word;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.inputAndButton {
+  display: flex;
+  align-items: center;
+}
+
+.inputAndButton input {
+  font-size: 25px;
+  background-color: transparent;
+  width: 800px;
+}
