@@ -11,6 +11,15 @@ import { ButtonModule } from 'primeng/button';
 import {RippleModule} from "primeng/ripple";
 import {TabViewModule} from 'primeng/tabview';
 import {CheckboxModule} from 'primeng/checkbox';
+import {AngularFireModule} from "@angular/fire";
+import {environment} from "../environments/environment";
+import {AngularFireAuthModule} from "@angular/fire/auth";
+import {DataService} from "./services/data.service";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
+import {MessageModule} from "primeng/message";
+import {MessagesModule} from "primeng/messages";
 
 @NgModule({
   declarations: [
@@ -26,9 +35,15 @@ import {CheckboxModule} from 'primeng/checkbox';
     ButtonModule,
     RippleModule,
     TabViewModule,
-    CheckboxModule
+    CheckboxModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    BrowserAnimationsModule,
+    ToastModule,
+    MessageModule,
+    MessagesModule
   ],
-  providers: [],
+  providers: [DataService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

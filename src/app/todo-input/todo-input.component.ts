@@ -15,7 +15,8 @@ export class TodoInputComponent implements OnInit, AfterViewInit {
   @ViewChild('mainInput') mainInput: ElementRef ;
   @ViewChild('addTodoButton') addTodoButton: ElementRef;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   ngAfterViewInit() {
 

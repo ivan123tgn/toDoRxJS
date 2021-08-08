@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Todo} from "../shared/models";
 import {DataService} from "../services/data.service";
-import {fromEvent, Observable, Subscription} from "rxjs";
-import {finalize, first, map, tap} from "rxjs/operators";
+import {fromEvent, merge, Observable, Subscription} from "rxjs";
+import {filter, finalize, first, map, tap} from "rxjs/operators";
 
 @Component({
   selector: 'todo-element',
@@ -81,7 +81,12 @@ export class TodoElementComponent implements OnInit,AfterViewInit,OnDestroy {
       .pipe(
         tap(() => {
           this.showChangeInput = true;
-          const clickEvent$ = fromEvent<any>(this.saveChange.nativeElement,'click')
+          const clickEventButton$ = fromEvent<any>(this.saveChange.nativeElement,'click');
+          const clickOutside$ = fromEvent<any>(document, 'click')
+            .pipe(
+              filter(event => event.target !== this.changeInput.nativeElement && event.target !== this.saveChange.nativeElement)
+            );
+          merge(clickEventButton$, clickOutside$)
             .pipe(
               first(),
               map(() => this.changeInput.nativeElement.value),
